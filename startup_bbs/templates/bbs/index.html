@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Hello World test!!</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+</head>
+<body>
+    <p>Hello World !!</p>
+
+    {# 投稿用のフォームをformタグで囲む。 #}
+    {# action属性は送信先。未指定の場合、このページを表示しているURLに送信される。IndexViewへ送信される。 #}
+    {# method属性はリクエストメソッド。未指定の場合はgetメソッドになる。大文字小文字の区別をつけない。 #} 
+    <form action="" method="post">
+        {# postメソッドで送信する際に、csrf_tokenテンプレートタグをformタグ内に含める。getのときはいらない。 #}
+        {# CSRF(しーさーふ) とは セキュリティ攻撃の一種。別の人が本人になりすましてリクエストを送信できてしまう。 #}
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="名前を入力してください">
+        <input type="text" name="comment" placeholder="コメントを入力してください">
+        <input type="submit" value="送信">
+    </form>
+
+
+    <!-- テンプレート変数 -->
+    <div>{{ comment }}</div>
+
+    {# DTLのコメントアウト #}
+    {# この部分はコメントアウトされる。この部分はソースコードにも表示されない。内部の処理など秘匿にしたい情報を書くのに最適。 #}
+
+    {# DTL のコメントアウトは改行できない。改行するとコメントとして認識されない。 #}
+
+
+    {% comment %} 
+    複数行コメントアウトしたい場合は、comment テンプレートタグを使う。
+
+    {% %} がテンプレートタグ。中に処理名を書くことで、処理を発動できる。
+    {{ }} がテンプレート変数。中にcontextのキー名を書くことで、値を表示できる。
+    {# #} がコメントアウト。
+
+    {% endcomment %}
+
+    {# 数値を含んだリストを表示させるには？ #}
+    <div>{{ numbers }}</div>
+
+    {# 配列の値を順番に出したい時、テンプレートタグのforを使う。 #}
+    {# HTMLはインデントを認識できない。endforを使って、ループの範囲を指定する必要が有る。 #}
+    {% for number in numbers %}
+    <div>{{ number }}</div>
+    {% endfor %}
+
+
+    {# score が 80以上であれば合格と表示するには？ テンプレートタグのifを使う。 #}
+    {% if score >= 80 %}
+    <div>合格</div>
+    {% elif score >= 60 %}
+    <div>補欠合格</div>
+    {% else %}
+    <div>不合格</div>
+    {% endif %}
+
+    {# statusがTrueであれば正常。 #}
+    {% if status %}
+    <div style="background:blue;">正常</div>
+    {% else %}
+    <div style="background:red;">異常</div>
+    {% endif %}
+
+
+    {# 辞書型のリストを表示するには？ forで1つずつ取り出し、キー名をオブジェクトの属性のように指定して取り出す。 #}
+    {% for topic in topics %}
+    <div>{{ topic.id }} : {{ topic.dt }} : {{ topic.name }} : {{ topic.comment }} </div>
+    {% endfor %}
+
+    {# 日付の表記を変えたい場合は？ テンプレートフィルタを使用する。 #}
+    <div>{{ now|date:"Y-m-d H:i:s" }}</div>
+    {# dateフィルタがない場合は、settings.pyのLANGUAGE_CODEで指定した言語のフォーマットで表示される。 #}
+    <div>{{ now }}</div>
+</body>
+</html>
